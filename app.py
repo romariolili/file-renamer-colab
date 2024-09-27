@@ -1,7 +1,7 @@
 from flask import Flask, request, send_file, render_template, jsonify
 import os
 from datetime import datetime
-import zipfile  # Importe zipfile corretamente da biblioteca padrão do Python
+import zipfile
 
 app = Flask(__name__)
 
@@ -28,37 +28,26 @@ def rename_file(old_file_path, document_type, document_name, document_number, ve
 # Endpoint para upload e renomear arquivos
 @app.route('/upload', methods=['POST'])
 def upload_and_rename():
-    if 'file' not in request.files:
-        return jsonify({'error': 'Nenhum arquivo enviado.'}), 400
-    
-    # Lista de arquivos enviados
-    files = request.files.getlist('file')
-
-    # Obter dados do formulário
-    document_type = request.form.get('document_type')
-    document_name = request.form.get('document_name')
-    document_number = int(request.form.get('document_number'))
-    version = int(request.form.get('version'))
-    issue_date = request.form.get('issue_date')
-    
-    # Validar se todos os parâmetros foram fornecidos
-    if not all([document_type, document_name, document_number, version, issue_date]):
-        return jsonify({'error': 'Faltam parâmetros para renomear o arquivo.'}), 400
-
     renamed_files = []
 
-    # Salvar e renomear cada arquivo
-    for file in files:
-        if file.filename == '':
-            continue
+    # Processar cada arquivo enviado e seus respectivos parâmetros
+    for i in range(len(request.files)):
+        file = request.files[f'file{i}']
 
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
+        # Obter parâmetros para cada arquivo
+        document_type = request.form.get(f'document_type{i}')
+        document_name = request.form.get(f'document_name{i}')
+        document_number = request.form.get(f'document_number{i}')
+        version = request.form.get(f'version{i}')
+        issue_date = request.form.get(f'issue_date{i}')
 
-        # Renomear o arquivo e incrementar o número do documento
-        new_file_name, new_file_path = rename_file(file_path, document_type, document_name, document_number, version, issue_date)
-        renamed_files.append(new_file_path)
-        document_number += 1  # Incrementa o número do documento para o próximo arquivo
+        if file and document_type and document_name and document_number and version and issue_date:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(file_path)
+
+            # Renomear o arquivo
+            new_file_name, new_file_path = rename_file(file_path, document_type, document_name, document_number, version, issue_date)
+            renamed_files.append(new_file_path)
 
     # Zipar os arquivos renomeados para download
     zip_filename = "arquivos_renomeados.zip"
@@ -66,9 +55,10 @@ def upload_and_rename():
     with zipfile.ZipFile(zip_path, 'w') as zipf:
         for file in renamed_files:
             zipf.write(file, os.path.basename(file))
-    
+
     # Retornar o arquivo zipado para download
     return send_file(zip_path, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
