@@ -1,6 +1,7 @@
-from flask import Flask, request, send_file, render_template, jsonify, zipfile
+from flask import Flask, request, send_file, render_template, jsonify
 import os
 from datetime import datetime
+import zipfile  # Importe zipfile corretamente da biblioteca padrão do Python
 
 app = Flask(__name__)
 
@@ -71,5 +72,3 @@ def upload_and_rename():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
-
