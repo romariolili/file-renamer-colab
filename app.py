@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template
 import os
 from datetime import datetime
 
@@ -11,10 +11,10 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Rota para testar se o serviço está rodando
+# Página inicial com formulário de upload
 @app.route('/')
 def home():
-    return "File Renamer Service is running!"
+    return render_template('upload.html')
 
 # Função para renomear arquivos
 def rename_file(old_file_path, document_type, document_name, document_number, version, issue_date):
@@ -76,3 +76,4 @@ def download_file(filename):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
