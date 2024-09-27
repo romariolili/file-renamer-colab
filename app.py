@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask import Flask, request, send_file, render_template, jsonify, zipfile
 import os
 from datetime import datetime
 
@@ -22,7 +22,7 @@ def rename_file(old_file_path, document_type, document_name, document_number, ve
     new_file_name = f"{document_type}_{document_name}_{document_number}_v{version}_{issue_date}{file_extension}".upper()
     new_file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_file_name)
     os.rename(old_file_path, new_file_path)
-    return new_file_name
+    return new_file_name, new_file_path
 
 # Endpoint para upload e renomear arquivos
 @app.route('/upload', methods=['POST'])
@@ -55,20 +55,19 @@ def upload_and_rename():
         file.save(file_path)
 
         # Renomear o arquivo e incrementar o número do documento
-        new_file_name = rename_file(file_path, document_type, document_name, document_number, version, issue_date)
-        renamed_files.append(new_file_name)
+        new_file_name, new_file_path = rename_file(file_path, document_type, document_name, document_number, version, issue_date)
+        renamed_files.append(new_file_path)
         document_number += 1  # Incrementa o número do documento para o próximo arquivo
 
-    # Retornar os arquivos renomeados
-    return jsonify({
-        'message': 'Arquivos renomeados com sucesso!',
-        'files': renamed_files
-    })
-
-# Endpoint para baixar o arquivo renomeado
-@app.route('/download/<filename>', methods=['GET'])
-def download_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    # Zipar os arquivos renomeados para download
+    zip_filename = "arquivos_renomeados.zip"
+    zip_path = os.path.join(app.config['UPLOAD_FOLDER'], zip_filename)
+    with zipfile.ZipFile(zip_path, 'w') as zipf:
+        for file in renamed_files:
+            zipf.write(file, os.path.basename(file))
+    
+    # Retornar o arquivo zipado para download
+    return send_file(zip_path, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
