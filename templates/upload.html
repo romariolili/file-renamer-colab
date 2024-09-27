@@ -1,1 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Renamer Service</title>
+</head>
+<body>
+    <h1>File Renamer Service</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="file">Escolha o arquivo:</label>
+        <input type="file" name="file" id="file" required><br><br>
 
+        <label for="document_type">Tipo de Documento (ex: IT, POL):</label>
+        <input type="text" name="document_type" required><br><br>
+
+        <label for="document_name">Nome do Documento:</label>
+        <input type="text" name="document_name" required><br><br>
+
+        <label for="document_number">Número do Documento:</label>
+        <input type="number" name="document_number" required><br><br>
+
+        <label for="version">Versão:</label>
+        <input type="number" name="version" required><br><br>
+
+        <label for="issue_date">Data de Emissão (DD-MM-YYYY):</label>
+        <input type="text" name="issue_date" required><br><br>
+
+        <button type="submit">Upload e Renomear</button>
+    </form>
+</body>
+</html>
