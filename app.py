@@ -20,7 +20,12 @@ def home():
 # Função para renomear arquivos
 def rename_file(old_file_path, document_type, document_name, document_number, version, issue_date):
     _, file_extension = os.path.splitext(old_file_path)
-    new_file_name = f"{document_type}_{document_name}_{document_number}_v{version}_{issue_date}{file_extension}".upper()
+
+    # Converter a data para o formato brasileiro
+    formatted_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%d-%m-%Y')
+    
+    # Criar o novo nome do arquivo com a data formatada
+    new_file_name = f"{document_type}_{document_name}_{document_number}_v{version}_{formatted_date}{file_extension}".upper()
     new_file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_file_name)
     os.rename(old_file_path, new_file_path)
     return new_file_name, new_file_path
@@ -39,7 +44,7 @@ def upload_and_rename():
         document_name = request.form.get(f'document_name{i}')
         document_number = request.form.get(f'document_number{i}')
         version = request.form.get(f'version{i}')
-        issue_date = request.form.get(f'issue_date{i}')
+        issue_date = request.form.get(f'issue_date{i}')  # No formato YYYY-MM-DD
 
         if file and document_type and document_name and document_number and version and issue_date:
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
