@@ -31,12 +31,14 @@
 
                 <label for="document_number${fileIndex}">Código do Documento:</label>
                 <select name="document_number${fileIndex}" required>
-                    ${[...Array(20).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
+                    <!-- Números de 1 a 20 -->
+                    ${Array.from({length: 20}, (v, k) => `<option value="${k+1}">${k+1}</option>`).join('')}
                 </select><br><br>
 
                 <label for="version${fileIndex}">Versão:</label>
                 <select name="version${fileIndex}" required>
-                    ${[...Array(20).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
+                    <!-- Números de 1 a 20 -->
+                    ${Array.from({length: 20}, (v, k) => `<option value="${k+1}">${k+1}</option>`).join('')}
                 </select><br><br>
 
                 <label for="issue_date${fileIndex}">Data de Emissão:</label>
@@ -70,12 +72,14 @@
 
                 <label for="document_number0">Código do Documento:</label>
                 <select name="document_number0" required>
-                    ${[...Array(20).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
+                    <!-- Números de 1 a 20 -->
+                    ${Array.from({length: 20}, (v, k) => `<option value="${k+1}">${k+1}</option>`).join('')}
                 </select><br><br>
 
                 <label for="version0">Versão:</label>
                 <select name="version0" required>
-                    ${[...Array(20).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
+                    <!-- Números de 1 a 20 -->
+                    ${Array.from({length: 20}, (v, k) => `<option value="${k+1}">${k+1}</option>`).join('')}
                 </select><br><br>
 
                 <label for="issue_date0">Data de Emissão:</label>
@@ -90,4 +94,3 @@
     </form>
 </body>
 </html>
-
