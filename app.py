@@ -21,8 +21,8 @@ def home():
 def rename_file(old_file_path, document_type, document_name, document_number, version, issue_date):
     _, file_extension = os.path.splitext(old_file_path)
 
-    # Converter a data para o formato brasileiro
-    formatted_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%d-%m-%Y')
+    # Converter a data para o formato brasileiro com dois dígitos para o ano
+    formatted_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%d-%m-%y')
     
     # Criar o novo nome do arquivo com a data formatada
     new_file_name = f"{document_type}_{document_name}_{document_number}_v{version}_{formatted_date}{file_extension}".upper()
