@@ -21,7 +21,7 @@
             'Lista Mestra': 'LM'
         };
 
-        // Função para atualizar a sigla e preencher o nome do documento
+        // Função para atualizar a sigla do tipo de documento
         function updateDocumentDetails() {
             const documentTypeSelect = document.getElementById("document_type");
             const selectedType = documentTypeSelect.options[documentTypeSelect.selectedIndex].text;
@@ -29,9 +29,6 @@
 
             // Atualizar o campo da sigla
             document.getElementById("document_sigla").textContent = documentSigla;
-
-            // Preencher o nome do documento com a sigla
-            document.getElementById("document_name").value = documentSigla;
         }
 
         // Função para adicionar mais arquivos e seus campos
