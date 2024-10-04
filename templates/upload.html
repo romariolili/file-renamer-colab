@@ -54,9 +54,7 @@
                 <input type="text" name="document_name${fileIndex}" id="document_name${fileIndex}" required><br><br>
 
                 <label for="document_number${fileIndex}">Código do Documento:</label>
-                <select name="document_number${fileIndex}" required>
-                    <!-- Opções de 0 a 400 -->
-                    ${Array.from({length: 401}, (v, k) => `<option value="${k}">${k}</option>`).join('')}
+                <select name="document_number${fileIndex}" required id="document_number${fileIndex}">
                 </select><br><br>
 
                 <label for="version${fileIndex}">Versão:</label>
@@ -89,7 +87,27 @@
             `;
 
             container.appendChild(div);
+
+            // Adicionando opções de 0 a 400 ao campo de Código do Documento
+            const documentNumberSelect = document.getElementById(`document_number${fileIndex}`);
+            for (let i = 0; i <= 400; i++) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                documentNumberSelect.appendChild(option);
+            }
         }
+
+        // Inicializando as opções de 0 a 400 no primeiro campo de Código do Documento
+        window.onload = function() {
+            const documentNumberSelect = document.getElementById('document_number0');
+            for (let i = 0; i <= 400; i++) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                documentNumberSelect.appendChild(option);
+            }
+        };
     </script>
 </head>
 <body>
@@ -124,9 +142,7 @@
                 <input type="text" name="document_name0" id="document_name" required><br><br>
 
                 <label for="document_number0">Código do Documento:</label>
-                <select name="document_number0" required>
-                    <!-- Opções de 0 a 400 -->
-                    ${Array.from({length: 401}, (v, k) => `<option value="${k}">${k}</option>`).join('')}
+                <select name="document_number0" required id="document_number0">
                 </select><br><br>
 
                 <label for="version0">Versão:</label>
