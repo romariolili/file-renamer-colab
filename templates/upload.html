@@ -55,27 +55,8 @@
 
                 <label for="document_number${fileIndex}">Código do Documento:</label>
                 <select name="document_number${fileIndex}" required>
-                    <!-- Opções de 1 a 20 fixas -->
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
+                    <!-- Opções de 0 a 400 -->
+                    ${Array.from({length: 401}, (v, k) => `<option value="${k}">${k}</option>`).join('')}
                 </select><br><br>
 
                 <label for="version${fileIndex}">Versão:</label>
@@ -144,27 +125,8 @@
 
                 <label for="document_number0">Código do Documento:</label>
                 <select name="document_number0" required>
-                    <!-- Opções de 1 a 20 fixas -->
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
+                    <!-- Opções de 0 a 400 -->
+                    ${Array.from({length: 401}, (v, k) => `<option value="${k}">${k}</option>`).join('')}
                 </select><br><br>
 
                 <label for="version0">Versão:</label>
