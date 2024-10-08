@@ -3,62 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload de Arquivos</title>
+    <title>Serviço de Renomear Arquivo</title>
     <script>
-        function handleFileInput(event) {
-            const fileList = document.getElementById('fileList');
-            const files = event.target.files;
-            fileList.innerHTML = '';
+        // Mapear os tipos de documentos com suas siglas
+        const documentTypes = {
+            'Manual de Gestão': 'MG',
+            'Política Institucional/ Interna': 'PI',
+            'Book de Processos': 'BP',
+            'Procedimento da Gestão': 'PG',
+            'Procedimento Operacional': 'PO',
+            'Modelagem de Processos': 'MP',  // Alterado
+            'Instrução de Trabalho': 'IT',
+            'Diagrama SIPOC': 'DS',
+            'Registro': 'RE',
+            'Tabela de Registro da Qualidade': 'TQ',
+            'Manual Operacional': 'MO',
+            'Lista Mestra': 'LM'
+        };
 
-            Array.from(files).forEach((file, index) => {
-                const fileItem = document.createElement('div');
-                fileItem.textContent = `${file.name} `;
-                
-                const removeButton = document.createElement('button');
-                removeButton.textContent = "Excluir";
-                removeButton.onclick = () => removeFile(index);
-                
-                fileItem.appendChild(removeButton);
-                fileList.appendChild(fileItem);
-            });
+        // Função para atualizar a sigla do tipo de documento
+        function updateDocumentDetails() {
+            const documentTypeSelect = document.getElementById("document_type");
+            const selectedType = documentTypeSelect.options[documentTypeSelect.selectedIndex].text;
+            const documentSigla = documentTypes[selectedType];
+
+            // Atualizar o campo da sigla
+            document.getElementById("document_sigla").textContent = documentSigla;
         }
 
-        function removeFile(index) {
-            const fileInput = document.getElementById('file');
-            const dataTransfer = new DataTransfer();
+        // Função para adicionar mais arquivos e seus campos
+        function addFileInput() {
+            const container = document.getElementById("file-container");
 
-            Array.from(fileInput.files).forEach((file, i) => {
-                if (i !== index) {
-                    dataTransfer.items.add(file);
-                }
-            });
+            const fileIndex = container.children.length;
 
-            fileInput.files = dataTransfer.files;
-            handleFileInput({ target: fileInput });
+            const div = document.createElement("div");
+            div.classList.add("file-entry");
+            div.setAttribute("id", `file-entry-${fileIndex}`);
+            div.innerHTML = `
+                <h3>Arquivo ${fileIndex + 1}</h3>
+                <label for="file${fileIndex}">Escolha o arquivo:</label>
+                <input type="file" name="file${fileIndex}" required><br><br>
+
+                <label for="document_type${fileIndex}">Tipo de Documento:</label>
+                <select name="document_type${fileIndex}" onchange="updateDocumentDetails()" id="document_type${fileIndex}" required>
+                    ${Object.keys(documentTypes).map(type => `<option value="${documentTypes[type]}">${type}</option>`).join('')}
+                </select>
+                <span id="document_sigla${fileIndex}"></span><br><br>
+
+                <label for="document_name${fileIndex}">Nome do Documento:</label>
+                <input type="text" name="document_name${fileIndex}" id="document_name${fileIndex}" required><br><br>
+
+                <label for="document_number${fileIndex}">Código do Documento:</label>
+                <select name="document_number${fileIndex}" required id="document_number${fileIndex}">
+                </select><br><br>
+
+                <label for="version${fileIndex}">Versão:</label>
+                <select name="version${fileIndex}" required>
+                    <!-- Opções de 1 a 20 fixas -->
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                </select><br><br>
+
+                <label for="issue_date${fileIndex}">Data de Emissão:</label>
+                <input type="date" name="issue_date${fileIndex}" required><br><br>
+
+                <!-- Botão para remover o arquivo -->
+                <button type="button" onclick="removeFileInput(${fileIndex})">Remover Arquivo</button><br><br>
+            `;
+
+            container.appendChild(div);
+
+            // Adicionar opções de 0 a 400 ao campo de Código do Documento
+            const documentNumberSelect = document.getElementById(`document_number${fileIndex}`);
+            for (let i = 0; i <= 400; i++) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                documentNumberSelect.appendChild(option);
+            }
         }
+
+        // Função para remover um arquivo adicionado
+        function removeFileInput(fileIndex) {
+            const container = document.getElementById("file-container");
+            const fileEntry = document.getElementById(`file-entry-${fileIndex}`);
+            if (fileEntry) {
+                container.removeChild(fileEntry);
+            }
+        }
+
+        // Inicializando as opções de 0 a 400 no primeiro campo de Código do Documento
+        window.onload = function() {
+            const documentNumberSelect = document.getElementById('document_number0');
+            for (let i = 0; i <= 400; i++) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                documentNumberSelect.appendChild(option);
+            }
+        };
     </script>
 </head>
 <body>
-    <h1>Envie seus arquivos</h1>
+    <h1>Serviço de Renomear Arquivo</h1>
     <form action="/upload" method="POST" enctype="multipart/form-data">
-        <label for="document_name">Nome do Documento:</label>
-        <input type="text" name="document_name" id="document_name"><br>
+        <div id="file-container">
+            <!-- Campo inicial para um arquivo -->
+            <div class="file-entry" id="file-entry-0">
+                <h3>Arquivo 1</h3>
+                <label for="file0">Escolha o arquivo:</label>
+                <input type="file" name="file0" required><br><br>
 
-        <label for="document_number_start">Número inicial do documento:</label>
-        <input type="number" name="document_number_start" id="document_number_start"><br>
+                <label for="document_type0">Tipo de Documento:</label>
+                <select name="document_type0" onchange="updateDocumentDetails()" id="document_type" required>
+                    <!-- Tipos de documento e suas siglas -->
+                    <option value="MG">Manual de Gestão</option>
+                    <option value="PI">Política Institucional/ Interna</option>
+                    <option value="BP">Book de Processos</option>
+                    <option value="PG">Procedimento da Gestão</option>
+                    <option value="PO">Procedimento Operacional</option>
+                    <option value="MP">Modelagem de Processos</option> <!-- Alterado -->
+                    <option value="IT">Instrução de Trabalho</option>
+                    <option value="DS">Diagrama SIPOC</option>
+                    <option value="RE">Registro</option>
+                    <option value="TQ">Tabela de Registro da Qualidade</option>
+                    <option value="MO">Manual Operacional</option>
+                    <option value="LM">Lista Mestra</option>
+                </select>
+                <span id="document_sigla"></span><br><br>
 
-        <label for="version_start">Versão inicial do documento:</label>
-        <input type="number" name="version_start" id="version_start"><br>
+                <label for="document_name0">Nome do Documento:</label>
+                <input type="text" name="document_name0" id="document_name" required><br><br>
 
-        <label for="issue_date">Data de emissão (DD/MM/AAAA):</label>
-        <input type="text" name="issue_date" id="issue_date"><br>
+                <label for="document_number0">Código do Documento:</label>
+                <select name="document_number0" required id="document_number0">
+                </select><br><br>
 
-        <label for="file">Escolha seus arquivos:</label>
-        <input type="file" name="file" id="file" multiple onchange="handleFileInput(event)"><br>
+                <label for="version0">Versão:</label>
+                <select name="version0" required>
+                    <!-- Opções de 1 a 20 fixas -->
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                   <option value="20">20</option>
+                </select><br><br>
 
-        <div id="fileList"></div> <!-- Lista de arquivos carregados -->
+                <label for="issue_date0">Data de Emissão:</label>
+                <input type="date" name="issue_date0" required><br><br>
 
-        <br><input type="submit" value="Enviar">
+                <!-- Botão para remover o arquivo -->
+                <button type="button" onclick="removeFileInput(0)">Remover Arquivo</button><br><br>
+            </div>
+        </div>
+
+        <!-- Botão para adicionar mais arquivos -->
+        <button type="button" onclick="addFileInput()">Adicionar mais arquivos</button><br><br>
+
+        <!-- Botão para renomear e fazer o download -->
+        <button type="submit">Renomear e Fazer Download</button>
     </form>
 </body>
 </html>
+
