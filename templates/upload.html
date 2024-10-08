@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload de Arquivos</title>
     <script>
-        // Função para adicionar arquivos à lista e permitir remoção
         function handleFileInput(event) {
             const fileList = document.getElementById('fileList');
             const files = event.target.files;
-            
-            // Limpar a lista de arquivos exibidos
             fileList.innerHTML = '';
 
-            // Mostrar cada arquivo na lista
             Array.from(files).forEach((file, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.textContent = `${file.name} `;
@@ -27,7 +23,6 @@
             });
         }
 
-        // Função para remover arquivos
         function removeFile(index) {
             const fileInput = document.getElementById('file');
             const dataTransfer = new DataTransfer();
