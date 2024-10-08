@@ -18,14 +18,14 @@ def home():
     return render_template('upload.html')
 
 # Função para renomear arquivos
-def rename_file(old_file_path, document_type, document_name, document_number, version, issue_date):
+def rename_file(old_file_path, document_number, document_type, document_name, version, issue_date):
     _, file_extension = os.path.splitext(old_file_path)
 
     # Converter a data para o formato brasileiro com dois dígitos para o ano
     formatted_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%d-%m-%y')
     
-    # Criar o novo nome do arquivo com "v" minúsculo para versão
-    new_file_name = f"{document_type.upper()}_{document_name.upper()}_{document_number}_v{version}_{formatted_date}{file_extension}"
+    # Criar o novo nome do arquivo com o código do documento no início e "v" minúsculo para versão
+    new_file_name = f"{document_number}_{document_type.upper()}_{document_name.upper()}_v{version}_{formatted_date}{file_extension}"
     new_file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_file_name)
     
     os.rename(old_file_path, new_file_path)
@@ -51,8 +51,8 @@ def upload_and_rename():
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(file_path)
 
-            # Renomear o arquivo
-            new_file_name, new_file_path = rename_file(file_path, document_type, document_name, document_number, version, issue_date)
+            # Renomear o arquivo com o código do documento no início
+            new_file_name, new_file_path = rename_file(file_path, document_number, document_type, document_name, version, issue_date)
             renamed_files.append(new_file_path)
 
     # Zipar os arquivos renomeados para download
