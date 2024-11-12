@@ -5,26 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Serviço de Renomear Arquivo</title>
     <script>
-        const documentTypes = {
-            'Manual de Gestão': 'MG',
-            'Política Institucional/ Interna': 'PI',
-            'Book de Processos': 'BP',
-            'Procedimento da Gestão': 'PG',
-            'Procedimento Operacional': 'PO',
-            'Modelagem de Processos': 'MP',
-            'Instrução de Trabalho': 'IT',
-            'Diagrama SIPOC': 'DS',
-            'Registro': 'RE',
-            'Tabela de Registro da Qualidade': 'TQ',
-            'Manual Operacional': 'MO',
-            'Lista Mestra': 'LM'
-        };
-
-        function updateDocumentDetails() {
-            const documentTypeSelect = document.getElementById("document_type");
+        function updateDocumentDetails(fileIndex) {
+            const documentTypeSelect = document.getElementById(`document_type${fileIndex}`);
             const selectedType = documentTypeSelect.options[documentTypeSelect.selectedIndex].text;
-            const documentSigla = documentTypes[selectedType];
-            document.getElementById("document_sigla").textContent = documentSigla;
+            const documentSigla = documentTypeSelect.value;
+            document.getElementById(`document_sigla${fileIndex}`).textContent = documentSigla;
         }
 
         function addFileInput() {
@@ -40,8 +25,19 @@
                 <input type="file" name="file${fileIndex}" required><br><br>
 
                 <label for="document_type${fileIndex}">Tipo de Documento:</label>
-                <select name="document_type${fileIndex}" onchange="updateDocumentDetails()" id="document_type${fileIndex}" required>
-                    ${Object.keys(documentTypes).map(type => `<option value="${documentTypes[type]}">${type}</option>`).join('')}
+                <select name="document_type${fileIndex}" onchange="updateDocumentDetails(${fileIndex})" id="document_type${fileIndex}" required>
+                    <option value="MG">Manual de Gestão</option>
+                    <option value="PI">Política Institucional/ Interna</option>
+                    <option value="BP">Book de Processos</option>
+                    <option value="PG">Procedimento da Gestão</option>
+                    <option value="PO">Procedimento Operacional</option>
+                    <option value="MP">Modelagem de Processos</option>
+                    <option value="IT">Instrução de Trabalho</option>
+                    <option value="DS">Diagrama SIPOC</option>
+                    <option value="RE">Registro</option>
+                    <option value="TQ">Tabela de Registro da Qualidade</option>
+                    <option value="MO">Manual Operacional</option>
+                    <option value="LM">Lista Mestra</option>
                 </select>
                 <span id="document_sigla${fileIndex}"></span><br><br>
 
@@ -107,10 +103,21 @@
                 <input type="file" name="file0" required><br><br>
 
                 <label for="document_type0">Tipo de Documento:</label>
-                <select name="document_type0" onchange="updateDocumentDetails()" id="document_type0" required>
-                    ${Object.keys(documentTypes).map(type => `<option value="${documentTypes[type]}">${type}</option>`).join('')}
+                <select name="document_type0" onchange="updateDocumentDetails(0)" id="document_type0" required>
+                    <option value="MG">Manual de Gestão</option>
+                    <option value="PI">Política Institucional/ Interna</option>
+                    <option value="BP">Book de Processos</option>
+                    <option value="PG">Procedimento da Gestão</option>
+                    <option value="PO">Procedimento Operacional</option>
+                    <option value="MP">Modelagem de Processos</option>
+                    <option value="IT">Instrução de Trabalho</option>
+                    <option value="DS">Diagrama SIPOC</option>
+                    <option value="RE">Registro</option>
+                    <option value="TQ">Tabela de Registro da Qualidade</option>
+                    <option value="MO">Manual Operacional</option>
+                    <option value="LM">Lista Mestra</option>
                 </select>
-                <span id="document_sigla"></span><br><br>
+                <span id="document_sigla0"></span><br><br>
 
                 <label for="document_name0">Nome do Documento:</label>
                 <input type="text" name="document_name0" required><br><br>
